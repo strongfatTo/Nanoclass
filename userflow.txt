@@ -1,0 +1,210 @@
+**NanoClass - Personalized Animated Lesson Generator Workflow**  
+(Claude Code Skill / Integration Blueprint v1.0)
+
+### 📋 Metadata
+- **Skill Name**: nanaclass-lesson-generator  
+- **Version**: 1.0.0  
+- **Description**: AI-powered animated lesson creator for K1–P3 teachers (ages 3–8). Automatically discovers each teacher’s exact needs, builds a persistent profile, and delivers fully personalized, curriculum-aligned, cartoon-style animated PPTs with interactive QuizSlides and Veo video transitions in under 2 minutes.  
+- **Tags**: nanaclass, kindergarten, primary, animated-ppt, quiz-slides, hk-tw-sg-curriculum, gemini, veo, teacher-marketplace  
+
+### ✨ Core Features (100% aligned with your product)
+- Automatic user-need discovery + persistent personalized profile (2-minute onboarding, then zero friction forever)  
+- Kid-friendly cartoon slides (large text, bright colors, big friendly characters)  
+- Smooth Veo video transitions between every slide (feels like a real cartoon, not a PowerPoint)  
+- Embedded QuizSlides (tap-to-answer, drag-and-match, spot-the-difference, counting games + confetti + sound rewards)  
+- HK/TW/SG curriculum templates built-in  
+- Multi-language (Cantonese, Mandarin, English – can mix in one lesson)  
+- One-click publish to TeacherMart (platform takes 20% cut)
+
+### 📦 System Requirements (matches your existing tech stack)
+**Required environment variables**
+- `GEMINI_API_KEY`  
+- `NANO_BANANA_API_KEY` (or use Gemini Image Generation directly)  
+- `VEO_API_KEY` (for smooth video transitions)
+
+**Optional (for persistent teacher profile)**
+- Supabase / Firebase / Vercel Postgres
+
+### 🚀 How to use (in Claude Code or directly in NanoClass web)
+```
+/nanoclass
+```
+or just say:
+```
+Create a K2 lesson on “Colors and Shapes of Fruits” in Cantonese with QuizSlides.
+```
+
+### 📝 Execution Flow (Focus: Need Declaration + Personalization)
+
+#### Stage 0: User Identification (instant)
+- New teacher → enters “Need Declaration Wizard”  
+- Returning teacher → profile loads instantly
+
+#### Stage 1: Need Declaration & Profile Creation (first time ~90 seconds, afterwards ~3 seconds)
+A short guided conversation that saves everything permanently:
+
+```markdown
+Welcome to NanoClass! Let’s build your personal teaching profile so every future lesson is automatically perfect for you.
+
+1. Which grades do you mainly teach? (multi-select)
+   - K1 (3-4 yrs)   K2 (4-5 yrs)   K3 (5-6 yrs)
+   - P1 (6-7 yrs)   P2 (7-8 yrs)   P3 (8-9 yrs)
+
+2. What language(s) do you teach in? (multi-select)
+   - Cantonese   Mandarin   English
+
+3. Which curriculum do you follow?
+   - Hong Kong   Taiwan   Singapore   Other (please specify)
+
+4. Preferred slide style? (we’ll use this as default)
+   - Super Cute Cartoon (big-eyed animals)
+   - Bright & Simple Educational
+   - Storybook Illustration
+   - I’ll upload reference images later
+
+5. Which interactive activities do you love most?
+   - Tap-to-answer   Drag-and-match   Spot-the-difference   Counting games
+   - I rarely use quizzes
+
+6. How many slides do you usually want per lesson?
+   - 6–8 slides (10–12 min)   10–12 slides (15–18 min)
+```
+
+→ Everything is saved to `teacher_profile.json` + database.  
+→ From now on, every new lesson starts with these exact preferences pre-filled.
+
+#### Stage 2: Topic Input
+- Type a topic (“Colors and Shapes of Fruits”)  
+- Pick from curriculum library (auto-filtered by your grade + region)  
+- Or let AI recommend based on your past lessons
+
+#### Stage 3: Auto-personalized Settings (you can tweak)
+```markdown
+Based on your profile we recommend:
+
+Slides: 8 (≈10 minutes)  
+Language: Cantonese + simple English keywords  
+Style: Super Cute Cartoon (big-eyed animals)  
+Quizzes: 3 interactive QuizSlides (tap + drag + spot-the-difference)
+
+Want to change anything?
+```
+
+#### Stage 4: Smart Lesson Planning → lesson_plan.json
+Automatically generated according to your profile:
+
+```json
+{
+  "teacher_id": "tch_8f3k9",
+  "grade": "K2",
+  "language": "cantonese",
+  "topic": "Colors and Shapes of Fruits",
+  "total_slides": 8,
+  "slides": [
+    { "slide_number": 1, "type": "cover", "content": "Today we’re exploring fruits! 🍎🍌" },
+    { "slide_number": 5, "type": "quiz", "quiz_type": "tap_answer", "question": "What colour is an apple?", "options": ["Red","Blue","Yellow"], "correct": 0, "reward": "confetti" },
+    ...
+  ]
+}
+```
+
+#### Stage 5: Generation (<2 minutes)
+1. Gemini → lesson text, Quiz questions, Cantonese script  
+2. NanoBanana / Gemini Image → cartoon slides (16:9, huge text, bright & kid-friendly)  
+3. Veo → 3–5 second smooth video transition between every pair of slides  
+4. Auto-assemble interactive HTML player (touch-friendly, Quiz engine + rewards)
+
+#### Stage 6: Preview → Edit → Publish
+- Open beautiful interactive preview (video transitions + clickable quizzes)  
+- Edit any slide instantly  
+- Save to My Library  
+- Publish to TeacherMart (auto-suggests price, 20% platform fee)
+
+#### Stage 7: Continuous Profile Improvement
+After each lesson:
+“Was this lesson perfect for you? Should we make ‘Super Cute Cartoon + 3 quizzes’ your new default?”
+
+→ Profile updates → next lesson is even better.
+
+### Personalization Examples
+- Hong Kong K2 Cantonese teacher → always gets 8 slides, Cantonese, HK curriculum, 3 quizzes  
+- Singapore P1 English teacher → always gets 10 slides, full English, SG MOE templates, more drag-and-match  
+- Teacher who loves “spot-the-difference” → automatically gets more of them every time
+
+### Output Structure (Web version)
+```
+teacher_id_xxx/
+├── lesson_20250210_fruits/
+│   ├── slides/               # cartoon images
+│   ├── transitions/          # Veo video clips
+│   ├── player.html           # interactive player with quizzes
+│   └── lesson.json
+└── teacher_profile.json
+```
+
+This workflow gives every teacher a truly individualized experience from the very first use, while staying completely inside your existing tech stack (Gemini + NanoBanana + Veo).
+
+Want me to:
+- Turn Stage 1 into ready-to-copy React component code?  
+- Write the full TypeScript schema for teacher_profile + lesson_plan?  
+- Add a “quick start” one-line command version?
+
+Just say the word!
+
+prompt:
+You are an expert full-stack AI product engineer, edtech specialist, and UX designer specializing in tools for early childhood education (ages 3–8). Current date: February 10, 2026. You have deep knowledge of the Google Gemini API ecosystem, including Gemini 3 family, Nano Banana / Nano Banana Pro for image generation, and Veo 3.1+ for video generation via the Gemini API.
+
+Your task is to help build/refine/expand **NanoClass** — an AI-powered animated lesson generator for kindergarten and early primary teachers (K1–P3, ages 3–8). Teachers create ultra-engaging, cartoon-style animated lessons that feel like lively stories to capture very young children's short attention spans.
+
+Updated project vision & core product (with new key feature):
+- Teachers input a topic (e.g. "Farm animals and sounds", "Counting to 10 with animals", "My body parts") or select from curriculum-aligned library (HK/TW/SG early childhood syllabi, bilingual: English, Mandarin, Cantonese support).
+- System generates a draft lesson structure in seconds.
+- **New mandatory feature — Edit & Confirm step (Canva-like)**: Before generating expensive Veo transitions or final output, show an intuitive, drag-and-drop editor preview where the teacher can:
+  - View all draft slides as thumbnails/carousel
+  - Click to edit individual slides: change text (large, simple, kid-friendly), reposition elements, replace AI-generated images with new Nano Banana generations (via "Regenerate image" button with prompt tweak), add/remove simple shapes/icons
+  - Edit quiz slides: adjust question text, answer options, correct answer, drag-match pairs, spot-difference elements
+  - Reorder, duplicate, or delete slides
+  - Preview basic slide transitions (static fade or simple CSS animation for now — no Veo yet)
+  - See overall lesson flow/story narrative summary
+  - Hit "Confirm & Generate Full Animation" to proceed to Veo video transitions + final composition
+- After confirmation, generate smooth Veo-powered animated transitions (3–6s cartoon-style scene changes), compose interactive player (or exportable format), and deliver in <2 min total where possible (editor step keeps heavy API calls post-confirmation to save costs/time).
+- Output: Web-based interactive HTML/JS player (with quizzes, confetti/sound rewards on correct answers, keyboard/fullscreen controls) + optional PPTX-like export if feasible.
+
+Mandatory tech stack & integrations:
+- **Frontend**: Next.js (App Router, React 19+, Tailwind CSS) — build a clean, mobile-friendly teacher dashboard + Canva-style editor canvas.
+- **Core AI**: Google Gemini API (your key) — use Gemini 3 Pro/Flash variants:
+  - Lesson outlining, kid-friendly text/scripts, quiz creation
+  - **Nano Banana Pro** (gemini-3-pro-image-preview) or Nano Banana for cartoon images (bright colors, large elements, cute characters, 16:9, high-res)
+  - **Veo 3.1** (via Gemini API generate_videos endpoint) for short transition clips (use image-to-video extension, first/last frame from consecutive slides + descriptive prompt for smooth, magical cartoon transitions like "cute bunny hops from farm scene to animal parade with sparkles")
+- **Base pipeline**: Adapt heavily from https://github.com/op7418/NanoBanana-PPT-Skills:
+  - Replace Kling AI with Veo API calls for transitions
+  - Use existing scripts for image gen → transition prompt gen → FFmpeg composition
+  - Extend to output interactive HTML player with quiz overlays (HTML5 drag/click + confetti.js + optional Web Audio API sounds)
+  - No native PPTX export in repo → focus on HTML player as primary (downloadable zip with offline support); explore libraries like PptxGenJS for basic PPTX if time allows
+- **New editor implementation ideas**:
+  - Use open-source React canvas libs: Fabric.js (for drag/resize/text/image editing), Konva.js, or react-konva for slide canvas
+  - Or build lightweight custom editor with React DnD + absolute-positioned elements
+  - Store draft state in local state / Zustand / Convex for real-time edits
+  - "Regenerate image" → call Nano Banana API with user-tweaked prompt
+- Extras: TeacherMart marketplace (publish/share/sell lessons, 20% cut), multi-lang generation, curriculum templates.
+
+Key priorities & constraints:
+- **Kid appeal**: Cartoon/cute/bright/safe visuals; large text (≥48pt equiv.); short lessons (8–15 slides); story flow; simple quizzes (tap, drag-match, count, spot-difference) with instant rewards
+- **Teacher UX**: Edit step must feel empowering like Canva — fast, visual, no-code; prevent bad outputs by letting teachers fix AI mistakes early
+- **Performance/Cost**: Delay Veo calls until after edit confirmation; use faster Nano Banana variants when possible; aim <2 min full gen post-confirmation
+- **Differentiation**: Animated Veo transitions + interactive quizzes + editability + marketplace + 3–8 focus
+
+Perform the following (output in clear numbered sections):
+1. **Architecture update** — Diagram/text workflow showing new Edit & Confirm stage inserted between draft generation and Veo/final composition. Suggest how to adapt NanoBanana-PPT-Skills repo (e.g. output draft JSON → Next.js editor → updated JSON → proceed to video gen).
+2. **Editor component design** — Detailed spec for Canva-like slide editor in Next.js/React: UI layout (sidebar tools, canvas, thumbnails), key interactions (edit text/image/quiz, reorder), state management, integration with Gemini for on-the-fly image regen.
+3. **Recommended libraries** — For editor canvas (Fabric.js/Konva/etc.), quizzes (custom HTML overlays), confetti/rewards, offline player.
+4. **Prompt engineering chain** — Updated sequence:
+   - Gemini 1: Generate draft lesson JSON (slides, texts, quiz data, image prompts)
+   - Nano Banana calls: Initial images for preview
+   - After edit: Regenerate images if changed + generate Veo prompts per transition
+   - Final Gemini/Veo: Create transition videos
+5. **5–7 engaging example topics** — With slide count, quiz types, why they captivate 3–8 year olds.
+6. **Challenges & solutions** — API costs (Veo expensive → confirm first), edit complexity for teachers, consistency after edits, offline playback, rate limits.
+7. **Hackathon MVP scope** — Core generation + editor + 3–5 sample topics + interactive player + one quiz type; what wins "best multimodal" or "most creative edtech".
+
+Be ultra-detailed, practical, creative — think like we're shipping the must-have tool for engaging kindergarten classes worldwide.
