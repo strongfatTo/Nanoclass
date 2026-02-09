@@ -6,18 +6,35 @@ import {
   TeacherProfile 
 } from './types';
 import { SAMPLE_TOPICS } from './constants';
-import { generateLessonDraft } from './services/geminiService';
+import { generateLessonDraft, initGemini } from './services/geminiService';
 import Wizard from './components/Wizard';
 import Editor from './components/Editor';
 import Player from './components/Player';
-import { Sparkles, Layout, Video } from 'lucide-react';
+import { Sparkles, Layout, Video, Key } from 'lucide-react';
 
 const App: React.FC = () => {
-  const [stage, setStage] = useState<AppStage>(AppStage.ONBOARDING);
+  const [stage, setStage] = useState<AppStage>(AppStage.API_ENTRY);
   const [profile, setProfile] = useState<TeacherProfile | null>(null);
   const [topic, setTopic] = useState('');
   const [lesson, setLesson] = useState<Lesson | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [apiKey, setApiKey] = useState('');
+
+  React.useEffect(() => {
+    const storedKey = localStorage.getItem('GEMINI_API_KEY');
+    if (storedKey) {
+      initGemini(storedKey);
+      setApiKey(storedKey);
+      setStage(AppStage.ONBOARDING);
+    }
+  }, []);
+
+  const handleApiKeySubmit = () => {
+    if (!apiKey.trim()) return;
+    localStorage.setItem('GEMINI_API_KEY', apiKey);
+    initGemini(apiKey);
+    setStage(AppStage.ONBOARDING);
+  };
 
   const handleProfileComplete = (newProfile: TeacherProfile) => {
     setProfile(newProfile);
@@ -70,6 +87,43 @@ const App: React.FC = () => {
 
       <main className="container mx-auto px-4 py-8">
         
+        {/* STAGE 0: API ENTRY */}
+        {stage === AppStage.API_ENTRY && (
+          <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-6 animate-fade-in">
+            <div className="bg-white p-8 rounded-2xl shadow-xl max-w-md w-full border-2 border-nana-yellow">
+              <div className="flex flex-col items-center text-center space-y-4">
+                <div className="bg-nana-orange text-white p-3 rounded-full">
+                  <Key size={32} />
+                </div>
+                <h2 className="text-2xl font-bold font-comic text-gray-800">Enter Gemini API Key</h2>
+                <p className="text-gray-600">
+                  To generate magical lessons, we need a Gemini API key. 
+                  <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noreferrer" className="text-nana-blue hover:underline ml-1">
+                    Get one here
+                  </a>.
+                </p>
+                
+                <input 
+                  type="password" 
+                  placeholder="AIzaSy..."
+                  className="w-full p-3 rounded-xl border-2 border-gray-200 focus:border-nana-blue outline-none"
+                  value={apiKey}
+                  onChange={(e) => setApiKey(e.target.value)}
+                  onKeyDown={(e) => e.key === 'Enter' && handleApiKeySubmit()}
+                />
+                
+                <button 
+                  onClick={handleApiKeySubmit}
+                  disabled={!apiKey}
+                  className="w-full bg-nana-green text-white py-3 rounded-xl font-bold hover:bg-green-600 disabled:opacity-50 transition-colors"
+                >
+                  Start Creating
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* STAGE 1: ONBOARDING */}
         {stage === AppStage.ONBOARDING && (
           <div className="flex flex-col items-center justify-center min-h-[60vh]">

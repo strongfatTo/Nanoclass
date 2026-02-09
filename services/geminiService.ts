@@ -3,14 +3,17 @@ import { Lesson, Slide, SlideType } from "../types";
 
 // NOTE: In a real app, do not expose API_KEY in frontend code.
 // This should be proxied through a backend.
-const apiKey = process.env.API_KEY || "YOUR_API_KEY_HERE"; 
+let ai: GoogleGenAI | null = null;
 
-const ai = new GoogleGenAI({ apiKey });
+export const initGemini = (apiKey: string) => {
+  ai = new GoogleGenAI({ apiKey });
+};
 
 export const generateLessonDraft = async (
   topic: string, 
   profile: any
 ): Promise<Lesson> => {
+  if (!ai) throw new Error("Gemini API not initialized. Please provide an API key.");
   const model = "gemini-2.5-flash"; // Fast model for logic
 
   const prompt = `
@@ -87,6 +90,7 @@ export const generateLessonDraft = async (
 };
 
 export const generateSlideImage = async (prompt: string): Promise<string> => {
+  if (!ai) throw new Error("Gemini API not initialized. Please provide an API key.");
   try {
     // Using the Nano Banana (Flash Image) model
     // In production, catch errors and fall back or show toast

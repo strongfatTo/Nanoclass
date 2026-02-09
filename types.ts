@@ -34,6 +34,7 @@ export interface Lesson {
 }
 
 export enum AppStage {
+  API_ENTRY = 'API_ENTRY',
   ONBOARDING = 'ONBOARDING',
   TOPIC_INPUT = 'TOPIC_INPUT',
   GENERATING_DRAFT = 'GENERATING_DRAFT',
